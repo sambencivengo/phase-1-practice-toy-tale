@@ -5,8 +5,8 @@ function createEl(el) {
   return document.createElement(el);
 }
 
-function getToys() {
-  fetch(toyURL)
+function getToys(url) {
+  fetch(url)
     .then((resp) => resp.json())
     .then((data) => {
       data.forEach((toy) => createToyCard(toy));
@@ -31,9 +31,47 @@ function createToyCard(toy) {
   toyCollection.append(card);
 }
 
+const submitToyForm = document.querySelector('form');
+const submitToyName = submitToyForm[0];
+const submitToyImage = submitToyForm[1];
+
+submitToyForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  postToy();
+});
+
+// LIKE BUTTON AND COUNTER
+// const likeButton = document.getElementsByClassName('like-btn');
+// likeButton.addEventListener('click', () => {
+//   console.log('click');
+// });
+
+function postToy() {
+  fetch(toyURL, {
+    method: 'POST', // or 'PUT'
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      name: submitToyName.value,
+      image: submitToyImage.value,
+      likes: 0,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      createToyCard(data);
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+}
+
 function init() {
   starterCode();
-  getToys();
+  getToys(toyURL);
 }
 
 function starterCode() {

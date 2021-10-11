@@ -24,9 +24,27 @@ function createToyCard(toy) {
   let toyLikes = createEl('p');
   toyLikes = toy.likes;
   const likeButton = createEl('button');
+  console.log(toy.likes);
+  // patch request
+  likeButton.addEventListener('click', () => {
+    toy.likes++;
+    fetch('http://localhost:3000/toys/:id', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        likes: toy.likes,
+      }),
+    });
+    console.log('Like Button: clicked!');
+  });
+  //
   likeButton.className = 'like-btn';
   likeButton.id = toy.id;
   likeButton.textContent = 'Like';
+
   card.append(toyName, toyImage, toyLikes, likeButton);
   toyCollection.append(card);
 }
@@ -41,10 +59,7 @@ submitToyForm.addEventListener('submit', (e) => {
 });
 
 // LIKE BUTTON AND COUNTER
-// const likeButton = document.getElementsByClassName('like-btn');
-// likeButton.addEventListener('click', () => {
-//   console.log('click');
-// });
+// const likeButton = document.getElementsByClassName('li?ke-btn');
 
 function postToy() {
   fetch(toyURL, {

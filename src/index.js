@@ -21,14 +21,17 @@ function createToyCard(toy) {
   const toyImage = createEl('img');
   toyImage.src = toy.image;
   toyImage.className = 'toy-avatar';
-  let toyLikes = createEl('p');
-  toyLikes = toy.likes;
+  const toyLikes = createEl('p');
+  toyLikes.textContent = toy.likes + ' likes';
+  toyLikes.className = 'toy-likes';
   const likeButton = createEl('button');
-  console.log(toy.likes);
+
   // patch request
-  likeButton.addEventListener('click', () => {
-    toy.likes++;
-    fetch('http://localhost:3000/toys/:id', {
+  likeButton.addEventListener('click', (e) => {
+    console.log(e.target.id);
+    console.log(toy.likes);
+    toyLikes.textContent = `${++toy.likes} likes`;
+    fetch(`http://localhost:3000/toys/${e.target.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -44,7 +47,6 @@ function createToyCard(toy) {
   likeButton.className = 'like-btn';
   likeButton.id = toy.id;
   likeButton.textContent = 'Like';
-
   card.append(toyName, toyImage, toyLikes, likeButton);
   toyCollection.append(card);
 }
